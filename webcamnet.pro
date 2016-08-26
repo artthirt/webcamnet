@@ -21,6 +21,6 @@ HEADERS += \
     openjp_decode.h \
     jpeg_decode.h
 
-LIBS += -lopenjpeg -lopencv_core -lopencv_highgui \
+LIBS += -lopenjp2 -lopencv_core -lopencv_highgui \
 		 -lboost_system -lboost_thread -ljpeg
 
