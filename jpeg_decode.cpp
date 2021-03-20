@@ -18,8 +18,8 @@ struct bufstream{
 	bufstream(const bytearray* d): data(d), offset(0){
 
 	}
-	u_char *ptr(){
-		return (u_char*)&(*data)[offset];
+    uint8_t *ptr(){
+        return (uint8_t*)&(*data)[offset];
 	}
 
 	void skip(size_t nb){
@@ -69,7 +69,7 @@ void jpeg_decode::decode(const bytearray &data, cv::Mat &mat)
 	bufstream bufstr(&data);
 	jpeg_source_mgr src;
 	src.bytes_in_buffer = data.size();
-	src.next_input_byte = (u_char*)&data[0];
+    src.next_input_byte = (uint8_t*)&data[0];
 	src.fill_input_buffer = fill_buffer;
 	src.init_source = init_src;
 	src.skip_input_data = skip_src;
@@ -79,7 +79,7 @@ void jpeg_decode::decode(const bytearray &data, cv::Mat &mat)
 
 	jpeg_create_decompress(&cinfo);
 
-	cinfo.err = jpeg_std_error(&jerr);
+    cinfo.err = jpeg_std_error(&jerr);
 
 	cinfo.client_data = &bufstr;
 	cinfo.src = &src;

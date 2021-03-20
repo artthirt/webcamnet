@@ -2,6 +2,7 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 #include <boost/asio/ip/udp.hpp>
+#include <boost/asio/io_service.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/thread.hpp>
 #include <queue>

@@ -1,6 +1,6 @@
 #include "openjp_decode.h"
 
-#include <openjpeg-2.1/openjpeg.h>
+#include <openjpeg-2.3/openjpeg.h>
 
 using namespace std;
 using namespace cv;
