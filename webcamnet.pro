@@ -7,7 +7,7 @@ DEFINES += _JPEG
 
 LIBJPEG_DIR = $$PWD/3rd/libjpeg
 OPENJPEG_DIR = $$PWD/3rd/openjpeg
-OPENCV_DIR = d:\\develop\\dir10\\opencv-4.5.1\\opencv\\build
+OPENCV_DIR = c:/devs/opencv/build
 BOOST_DIR = d:\\devs\\Boost\\
 
 INCLUDEPATH += utils \
@@ -42,3 +42,4 @@ win32{
                      -lboost_system -lboost_thread -ljpeg
 }
 
+include(asio.pri)

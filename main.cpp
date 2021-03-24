@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <opencv2/opencv.hpp>
-#include <boost/asio/ip/udp.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/placeholders.hpp>
-#include <boost/thread.hpp>
+#include <asio/ip/udp.hpp>
+#include <asio/io_service.hpp>
+#include <asio/placeholders.hpp>
+#include <thread>
 #include <queue>
 #include <mutex>
 
@@ -20,7 +20,7 @@
 
 using namespace std;
 using namespace cv;
-using namespace boost::asio::ip;
+using namespace asio::ip;
 
 struct Frame{
 	Frame(){
@@ -34,7 +34,7 @@ struct Frame{
 		done = false;
 		data = frame.data;
 
-		thread = boost::thread(boost::bind(&Frame::run, this));
+        thread = std::thread(std::bind(&Frame::run, this));
 	}
 
 	void run(){
@@ -47,7 +47,7 @@ struct Frame{
 		done = true;
 	}
 
-	boost::thread thread;
+    std::thread thread;
 	Mat image;
 	bytearray data;
 	bool done;
@@ -83,7 +83,7 @@ public:
 		m_socket->close();
 		m_socket->open(udp::v4());
 
-		m_socket->bind(udp::endpoint(boost::asio::ip::address::from_string("0.0.0.0"), port));
+        m_socket->bind(udp::endpoint(asio::ip::address::from_string("0.0.0.0"), port));
 	}
 
 	void close(){
@@ -94,7 +94,7 @@ public:
 	void run(){
 		m_socket = new udp::socket(m_io, udp::endpoint(udp::v4(), m_port));
 
-		boost::thread thread(boost::bind(&listen_asf::run2, this));
+        std::thread thread(std::bind(&listen_asf::run2, this));
 
 		start_receive();
 
@@ -129,18 +129,17 @@ public:
 	}
 
 	void start_receive(){
-		m_socket->async_receive(boost::asio::null_buffers(),
-								boost::bind(&listen_asf::handleReceive, this,
-											boost::asio::placeholders::error,
-											boost::asio::placeholders::bytes_transferred));
+        m_socket->async_receive(asio::null_buffers(),
+                                std::bind(&listen_asf::handleReceive, this,
+                                            std::placeholders::_1, std::placeholders::_2));
 	}
 
-	void handleReceive(const boost::system::error_code &error, size_t size)
+    void handleReceive(const asio::error_code &error, size_t size)
 	{
 		size_t available = m_socket->available();
 		m_buffer.resize(available);
 
-		size_t packetSize = m_socket->receive(boost::asio::buffer(m_buffer, available));
+        size_t packetSize = m_socket->receive(asio::buffer(m_buffer, available));
 
 		bytearray packet;
 		packet.resize(packetSize);
@@ -181,7 +180,7 @@ public:
 
 private:
 	udp::socket* m_socket;
-	boost::asio::io_service m_io;
+    asio::io_service m_io;
 	asf_stream m_asf;
 	u_short m_port;
 	queue< Frame > m_pool;
@@ -197,7 +196,7 @@ int main()
 
 	listen_asf listen;
 
-	boost::thread thread(boost::bind(&listen_asf::run, &listen));
+    std::thread thread(std::bind(&listen_asf::run, &listen));
 
 	namedWindow("webcam", WINDOW_NORMAL);
 

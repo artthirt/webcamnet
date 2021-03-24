@@ -1,3 +1,6 @@
 [submodule "utils"]
 	path = utils
 	url = https://github.com/artthirt/utils.git
+[submodule "asio"]
+	path = asio
+	url = https://github.com/chriskohlhoff/asio.git
