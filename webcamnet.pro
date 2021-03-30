@@ -1,13 +1,15 @@
 TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
-CONFIG -= qt
+CONFIG += qt
+
+QT += gui widgets opengl
 
 DEFINES += _JPEG
 
 LIBJPEG_DIR = $$PWD/3rd/libjpeg
 OPENJPEG_DIR = $$PWD/3rd/openjpeg
-OPENCV_DIR = c:/devs/opencv/build
+OPENCV_DIR = d:/devs/opencv/build
 BOOST_DIR = d:\\devs\\Boost\\
 
 INCLUDEPATH += utils \
@@ -19,6 +21,9 @@ INCLUDEPATH += utils \
 LIBS += -L$$LIBJPEG_DIR/lib -L$$OPENJPEG_DIR/bin -L$$OPENCV_DIR/x64/vc15/bin -L$$BOOST_DIR/lib
 
 SOURCES += main.cpp \
+    listen_asf.cpp \
+    mainwindow.cpp \
+    outputimage.cpp \
 	utils/asf_stream.cpp \
 	utils/datastream.cpp \
         openjp_decode.cpp \
@@ -26,6 +31,9 @@ SOURCES += main.cpp \
 	utils/common.cpp
 
 HEADERS += \
+    listen_asf.h \
+    mainwindow.h \
+    outputimage.h \
 	utils/asf_stream.h \
 	utils/common.h \
 	utils/datastream.h \
@@ -43,3 +51,9 @@ win32{
 }
 
 include(asio.pri)
+
+FORMS += \
+    mainwindow.ui
+
+RESOURCES += \
+    res.qrc

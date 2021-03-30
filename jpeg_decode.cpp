@@ -57,10 +57,26 @@ boolean resync_to_restart(j_decompress_ptr cinfo, int desired)
 	return true;
 }
 
+void exitFn(j_common_ptr cinfo)
+{
+    jpeg_decode *j = static_cast<jpeg_decode*>(cinfo->client_data);
+    if(j){
+        j->setError();
+    }
+}
+
 ///////////////////////////
 
 void jpeg_decode::decode(const bytearray &data, cv::Mat &mat)
 {
+    if(data.empty()){
+        return;
+    }
+
+    if(data[0] == 0 && data[1] == 0){
+        return;
+    }
+
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr jerr;
 
@@ -76,10 +92,12 @@ void jpeg_decode::decode(const bytearray &data, cv::Mat &mat)
 	src.term_source = term_src;
 	src.resync_to_restart = resync_to_restart;
 
-
 	jpeg_create_decompress(&cinfo);
 
+    cinfo.client_data = this;
     cinfo.err = jpeg_std_error(&jerr);
+
+    jerr.error_exit = exitFn;
 
 	cinfo.client_data = &bufstr;
 	cinfo.src = &src;
@@ -104,7 +122,7 @@ void jpeg_decode::decode(const bytearray &data, cv::Mat &mat)
 	}
 
 	mat = cv::Mat(cinfo.output_height, cinfo.output_width, type);
-	while(cinfo.output_scanline < cinfo.output_height){
+    while(cinfo.output_scanline < cinfo.output_height && !error()){
 		unsigned char *buffer_array[1];
 		buffer_array[0] = &mat.data[offset];
 		jpeg_read_scanlines(&cinfo, buffer_array, 1);
