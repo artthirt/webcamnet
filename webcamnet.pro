@@ -34,6 +34,7 @@ HEADERS += \
     listen_asf.h \
     mainwindow.h \
     outputimage.h \
+    structs.h \
 	utils/asf_stream.h \
 	utils/common.h \
 	utils/datastream.h \

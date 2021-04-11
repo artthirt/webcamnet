@@ -2,12 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 #include <opencv2/opencv.hpp>
 
-#include <functional>
-
-typedef std::function<void(int)> funsetexposure;
+#include "structs.h"
 
 namespace Ui{
     class MainWindow;
@@ -18,6 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
     void sendMat(const cv::Mat& mat);
 
@@ -34,10 +34,22 @@ private slots:
 
     void on_hsBlue_valueChanged(int value);
 
+    void on_sbQuality_valueChanged(int arg1);
+
+    void on_chbGamma_clicked(bool checked);
+
+    void on_chbResolution_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui = nullptr;
 
+    QTimer mTimer;
+    Cntrl mCntrl;
+
     funsetexposure mSetExposure;
+
+    void loadSettings();
+    void saveSettings();
 };
 
 #endif // MAINWINDOW_H

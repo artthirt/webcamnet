@@ -7,7 +7,7 @@ void main(){
     vec4 col = texture2D(Tex, vTex);
 
     if(Gamma > 0){
-        col.rgb = pow(col.rgb, vec3(1./2.1));
+        col.rgb = pow(col.rgb, vec3(1./1.9));
     }
 
     gl_FragColor = uRgb * col.bgra;

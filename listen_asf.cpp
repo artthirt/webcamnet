@@ -142,12 +142,14 @@ void listen_asf::analyze_data(const bytearray &data){
     }
 }
 
-void listen_asf::set_exposure(int val)
+void listen_asf::set_cntrl(const Cntrl &val)
 {
     bytearray data;
     data.resize(4 * 10, 0);
     int* di = reinterpret_cast<int*>(data.data());
-    di[0] = val;
+    di[0] = val.exposure;
+    di[1] = val.quality;
+    di[2] = val.resolutionid;
 
     m_socket->send_to(asio::buffer(data), mRemoteEndpoint);
 }

@@ -42,7 +42,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Exposure(ms)</string>
+          <string>Exposure(us)</string>
          </property>
         </widget>
        </item>
@@ -57,6 +57,70 @@
          <property name="value">
           <number>200</number>
          </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Quality</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="sbQuality">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>50</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Resolution</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="chbGamma">
+         <property name="text">
+          <string>Gamma</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="chbResolution">
+         <item>
+          <property name="text">
+           <string>1920x1080</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1280x720</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>640x480</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>

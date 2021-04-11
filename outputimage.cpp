@@ -1,5 +1,7 @@
 #include "outputimage.h"
 
+#include <QMouseEvent>
+
 OutputImage::OutputImage(QWidget *w)
     : QOpenGLWidget(w)
     , OpenGLFunctions()
@@ -36,8 +38,14 @@ void OutputImage::drawTexture()
     mModel.translate(mTranslate.x(), -mTranslate.y(), -2);
 
     if(!mImage.empty()){
-        float ar = 1. * mImage.cols / mImage.rows;
-        mModel.scale(mScale * ar, mScale * 1, 0);
+        float ar = 1. * width() / height();
+        float arim = 1. * mImage.cols / mImage.rows;
+
+        if(ar > arim){
+            mModel.scale(mScale * arim, mScale * 1, 0);
+        }else{
+            mModel.scale(mScale * ar, mScale * ar/arim, 0);
+        }
     }
 
     mMVP = mProj * mModel;
@@ -172,4 +180,39 @@ void OutputImage::resizeGL(int w, int h)
 void OutputImage::paintGL()
 {
     drawTexture();
+}
+
+void OutputImage::mousePressEvent(QMouseEvent *event)
+{
+    mLBDown = event->button() == Qt::LeftButton;
+    mIsUpdate = true;
+    mMPos = event->pos();
+}
+
+void OutputImage::mouseReleaseEvent(QMouseEvent *event)
+{
+    mLBDown = false;
+    mIsUpdate = true;
+    mMPos = event->pos();
+}
+
+void OutputImage::mouseMoveEvent(QMouseEvent *event)
+{
+    if(mLBDown){
+        QPointF dlt = event->pos() - mMPos;
+        mTranslate += dlt * 2./height();
+        mIsUpdate = true;
+        mMPos = event->pos();
+    }
+}
+
+void OutputImage::wheelEvent(QWheelEvent *event)
+{
+    float dlt = event->delta();
+    mScale += dlt/100;
+    if(mScale < 1){
+        mScale = 1;
+        mTranslate = QPointF();
+        mIsUpdate = true;
+    }
 }

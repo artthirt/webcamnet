@@ -19,9 +19,10 @@ public:
 
     void setImage(const cv::Mat& m);
 
-    void setRed(float val)    { mRgb[0] = val; mIsUpdate = true; }
-    void setGreen(float val)  { mRgb[1] = val; mIsUpdate = true; }
-    void setBlue(float val)   { mRgb[2] = val; mIsUpdate = true; }
+    void setRed(float val)    { mRgb[0] = val;  mIsUpdate = true; }
+    void setGreen(float val)  { mRgb[1] = val;  mIsUpdate = true; }
+    void setBlue(float val)   { mRgb[2] = val;  mIsUpdate = true; }
+    void setGamma(bool check) { mGamma = check; mIsUpdate = true; }
 
 public slots:
     void onTimeout();
@@ -74,6 +75,12 @@ protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
     void paintGL() override;
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 };
 
 #endif // OUTPUTIMAGE_H

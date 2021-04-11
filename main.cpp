@@ -61,8 +61,8 @@ int main(int argc, char* argv[])
         w.sendMat(m);
     };
 
-    auto setexp = [&listen](int val){
-        listen.set_exposure(val);
+    auto setexp = [&listen](const Cntrl& val){
+        listen.set_cntrl(val);
     };
 
     w.setFunSetExposure(setexp);

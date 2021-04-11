@@ -15,6 +15,7 @@
 #include "datastream.h"
 #include "asf_stream.h"
 
+#include "structs.h"
 
 #ifdef _JPEG
 #include "jpeg_decode.h"
@@ -62,7 +63,7 @@ public:
 
     void analyze_data(const bytearray& data);
 
-    void set_exposure(int val);
+    void set_cntrl(const Cntrl &val);
 
     bool empty() const;
 
