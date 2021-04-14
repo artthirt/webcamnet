@@ -22,6 +22,7 @@ public:
     void sendMat(const cv::Mat& mat);
 
     void setFunSetExposure(funsetexposure val);
+    void setFunSetAddress(funsetaddress val);
 
 signals:
 
@@ -40,6 +41,8 @@ private slots:
 
     void on_chbResolution_currentIndexChanged(int index);
 
+    void on_pbSetAddress_clicked();
+
 private:
     Ui::MainWindow *ui = nullptr;
 
@@ -47,6 +50,7 @@ private:
     Cntrl mCntrl;
 
     funsetexposure mSetExposure;
+    funsetaddress mSetAddress;
 
     void loadSettings();
     void saveSettings();

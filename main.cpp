@@ -64,8 +64,12 @@ int main(int argc, char* argv[])
     auto setexp = [&listen](const Cntrl& val){
         listen.set_cntrl(val);
     };
+    auto setaddr = [&listen](const std::string& ip, uint16_t p){
+        listen.setAddress(ip, p);
+    };
 
     w.setFunSetExposure(setexp);
+    w.setFunSetAddress(setaddr);
 
     std::thread thread2(listen_thread, &listen, fn);
 

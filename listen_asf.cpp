@@ -37,7 +37,7 @@ listen_asf::listen_asf()
     , m_port(10000)
     , m_done(false)
 {
-
+    mTimeStart = getNow();
 }
 
 listen_asf::~listen_asf(){
@@ -73,6 +73,8 @@ void listen_asf::run(){
     //start_receive();
 
     m_io.run();
+
+    doTimeout();
 
     thread.join();
     thrrecv.join();
@@ -131,7 +133,10 @@ void listen_asf::handleReceive(const asio::error_code &error, size_t size, udp::
     start_receive();
 }
 
-void listen_asf::analyze_data(const bytearray &data){
+void listen_asf::analyze_data(const bytearray &data)
+{
+    mTimeStart = getNow();
+
     bytearray buffer = m_asf.add_packet(data);
 
     if(m_pool.size() >= max_threads)
@@ -154,6 +159,12 @@ void listen_asf::set_cntrl(const Cntrl &val)
     m_socket->send_to(asio::buffer(data), mRemoteEndpoint);
 }
 
+void listen_asf::setAddress(const string &ip, uint16_t port)
+{
+    mRemoteEndpoint.address(asio::ip::address_v4::from_string(ip));
+    mRemoteEndpoint.port(port);
+}
+
 bool listen_asf::empty() const{
     return m_images.size() == 0;
 }
@@ -169,8 +180,13 @@ void listen_asf::doReceive()
     bytearray packet, copypkt;
     packet.resize(65536);
     size_t packetSize = 0;
+
+    asio::ip::udp::endpoint ep;
+
+    asio::socket_base::message_flags flags = 0;
+    asio::error_code err;
     for(;!m_done;){
-        packetSize = m_socket->receive_from(asio::buffer(packet), mRemoteEndpoint);
+        packetSize = m_socket->receive_from(asio::buffer(packet), ep, flags, err);
         if(packetSize){
             copypkt.resize(packetSize);
             std::copy(packet.begin(), packet.begin() + packetSize, copypkt.begin());
@@ -179,4 +195,25 @@ void listen_asf::doReceive()
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
     }
+}
+
+void listen_asf::doTimeout()
+{
+    for(;!m_done;){
+        sendLive();
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+}
+
+void listen_asf::sendLive()
+{
+    if(!mRemoteEndpoint.port())
+        return;
+
+    bytearray data;
+    data.resize(4 * 10, 0);
+    int* di = reinterpret_cast<int*>(data.data());
+    di[0] = 0xffffffff;
+
+    m_socket->send_to(asio::buffer(data), mRemoteEndpoint);
 }

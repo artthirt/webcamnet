@@ -35,6 +35,11 @@ void MainWindow::setFunSetExposure(funsetexposure val)
     mSetExposure = val;
 }
 
+void MainWindow::setFunSetAddress(funsetaddress val)
+{
+    mSetAddress = val;
+}
+
 void MainWindow::on_sbExposure_valueChanged(int arg1)
 {
     if(mSetExposure){
@@ -96,5 +101,12 @@ void MainWindow::on_chbResolution_currentIndexChanged(int index)
     if(mSetExposure){
         mCntrl.resolutionid = index;
         mSetExposure(mCntrl);
+    }
+}
+
+void MainWindow::on_pbSetAddress_clicked()
+{
+    if(mSetAddress){
+        mSetAddress(ui->leIp->text().toStdString(), ui->sbPort->value());
     }
 }

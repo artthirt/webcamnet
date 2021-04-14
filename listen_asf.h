@@ -65,6 +65,8 @@ public:
 
     void set_cntrl(const Cntrl &val);
 
+    void setAddress(const std::string& ip, uint16_t port);
+
     bool empty() const;
 
     cv::Mat pop();
@@ -80,10 +82,14 @@ private:
     bytearray m_buffer;
 
     asio::ip::udp::endpoint mRemoteEndpoint;
+    timepoint mTimeStart;
 
     bool m_done;
 
     void doReceive();
+    void doTimeout();
+
+    void sendLive();
 };
 
 #endif // LISTEN_ASF_H
